@@ -1,0 +1,13 @@
+# This is a test file that override upon using 'docker compose'
+# Contains all the ports required to work on localhost
+
+services:
+ db:
+  ports:
+   - "3306:3306"
+ backend:
+  ports:
+   - "8000:8000"
+ frontend:
+  ports:
+   - "3000:80"

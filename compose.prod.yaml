@@ -1,0 +1,25 @@
+# This file is the override when ran on a production server
+
+services:
+   # Exposed via traefik
+ frontend:
+  labels:
+   - "traefik.enable=true"
+   - "traefik.http.routers.se-dev.rule=Host(`se-dev.hatamoto.uk`)"
+   - "traefik.http.routers.se-dev.entrypoints=websecure"
+   - "traefik.http.routers.se-dev.tls=true"
+  networks:
+   - komodo_default
+   # Hidden, communicate via docker network   
+ backend:
+  networks:
+   - komodo_default
+
+   # Hidden, communicate via docker network   
+ db: 
+  networks:
+   - komodo_default
+
+networks:
+ komodo_default:
+  external: true
