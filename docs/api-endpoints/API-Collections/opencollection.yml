@@ -16,9 +16,9 @@ config:
 
 docs:
   content: |
-    | Method | Endpoint | Body | Response |
-    |----------|----------|------|----------|
-    | GET      | /api/notes | none | 200 users, or 401 | 
+    | Method | Auth | Endpoint | Request body | Success | Error|
+    |--------|------|----------|--------------|----------|-----|
+    | GET    | No   | /api/health | No | 200 | 503 |
   type: text/markdown
 bundled: false
 extensions:
