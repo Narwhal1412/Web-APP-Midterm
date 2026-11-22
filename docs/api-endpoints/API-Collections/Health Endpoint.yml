@@ -1,6 +1,7 @@
 info:
   name: Health Endpoint
   type: http
+  seq: 1
 
 http:
   method: GET
@@ -12,3 +13,9 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+
+docs: |
+  | Status | Response |
+  |--------|------|
+  | 200    | {"db":"ok","container":"ID"} |
+  | 503    | {"db":"down","container":"ID"} |
