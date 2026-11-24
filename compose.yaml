@@ -9,6 +9,7 @@ services:
    MARIADB_PASSWORD: ${DB_PASSWORD}
   volumes:
    - db_data:/var/lib/mysql
+   # Loads the default init database, when the database is empty
    - ./Database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
   healthcheck:
    test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
