@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && pecl install redis && docker-php-ext-enable redis
 
 # Copy composer from the official image, and move it over to this image
-COPY --from=composer:v2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Set the default working directory inside the image
 WORKDIR /app
