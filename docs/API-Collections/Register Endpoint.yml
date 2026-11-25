@@ -15,8 +15,8 @@ http:
       {
         "name": "Testing!!!",
         "email": "testing@account.meeeee",
-        "password": "Test@password123",
-        "password_confirmation": "Test@password123"
+        "password": "Test@password122",
+        "password_confirmation": "Test@password12"
       }
   auth: inherit
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,20 +22,26 @@ class NoteController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Lay id cua nguoi dang dang nhap
+        // Lay id user dang dang nhap qua Sanctum
         $userId = $request->user()->id;
 
-        // Cap nhat ghi chu theo id va dung cua nguoi dang dang nhap
-        DB::table('notes')
-            ->where('id', $id)
+        // Tim note theo id cua user (khong co hoac khong phai cua user dang tim thi tra ve 404)
+        $note = Note::where('id', $id)
             ->where('user_id', $userId)
-            ->update([
-                'title' => $request->title,
-                'content' => $request->content,
-            ]);
+            ->firstOrFail();
 
-        // Tra ket qua thanh cong
-        return response()->json(['message' => 'Updated'], 200);
+        // Kiem tra du lieu gui len
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'content' => 'sometimes|required|string',
+        ]);
+
+        // Gan gia tri moi vao note va luu xuong database
+        $note->fill($validated);
+        $note->save();
+
+        // Tra ve note da cap nhat kem ma 200
+        return response()->json($note, 200);
     }
 
 }

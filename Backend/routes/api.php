@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NoteController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,3 +30,9 @@ Route::get('/health', function () {
 
 // Register endpoint
 Route::post('/register', [AuthController::class, 'register']);
+
+// Read endpoint
+Route::get('/notes', [NoteController::class, 'index'])->middleware('auth:sanctum');
+
+// Update endpoint
+Route::put('/notes/{id}', [NoteController::class, 'update'])->middleware('auth:sanctum');
