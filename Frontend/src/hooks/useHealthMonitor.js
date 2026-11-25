@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
 import { parseHealth } from '../utils/health';
 
-// Polls GET /api/health every second and classifies the answer:
+// Polls GET /api/health every 5 seconds and classifies the answer:
 //   up       -> 200
 //   degraded -> 503 (the web service answers, but the database or Redis is down)
 //   down     -> no answer at all (container stopped / restarting, timeout, 502, 504)
 // Every switch away from "up" and back is recorded, so downtime is measured, not guessed.
 // Precision is about +/- one polling interval.
-export default function useHealthMonitor(intervalMs = 1000) {
+export default function useHealthMonitor(intervalMs = 5000) {
   const [state, setState] = useState(null); // null = not known yet
   const [snapshot, setSnapshot] = useState(null);
   const [events, setEvents] = useState([]); // newest first

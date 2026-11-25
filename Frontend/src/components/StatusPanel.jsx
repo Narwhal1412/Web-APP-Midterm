@@ -13,7 +13,7 @@ export default function StatusPanel({ monitor }) {
   const web = state === null ? 'unknown' : state === 'down' ? 'down' : 'up';
   const dep = (s) => (web === 'up' ? s || 'unknown' : 'unknown');
 
-  // Manual check: same endpoint as the poller, but logged in the request log.
+  // Manual check: same endpoint as the poller, but logged by the API client.
   const runCheck = async () => {
     setBusy(true);
     try {

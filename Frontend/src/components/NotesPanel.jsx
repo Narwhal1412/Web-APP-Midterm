@@ -22,6 +22,7 @@ export default function NotesPanel() {
   const [form, setForm] = useState({ title: '', content: '' });
   const [editId, setEditId] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [detail, setDetail] = useState(null); // one note fetched with GET /notes/:id
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -58,9 +59,10 @@ export default function NotesPanel() {
   };
 
   const edit = (n) => { setEditId(n.id); setForm({ title: n.title || '', content: n.content || '' }); };
+  const view = (n) => guard(async () => { const { body } = await api.note(n.id); setDetail(body?.data ?? body); });
   const remove = (n) => {
     if (!window.confirm(`Delete “${n.title}”?`)) return;
-    guard(async () => { await api.deleteNote(n.id); await load(); });
+    guard(async () => { await api.deleteNote(n.id); if (detail?.id === n.id) setDetail(null); await load(); });
   };
 
   // 20 sequential list requests: the first may be a miss, the rest should be hits.
@@ -102,6 +104,16 @@ export default function NotesPanel() {
 
       {error && <p className="error" role="alert">{error}</p>}
 
+      {detail && (
+        <div className="card" style={{ marginTop: 12 }} role="region" aria-label="Note detail">
+          <div className="row-between" style={{ margin: 0 }}>
+            <strong>{detail.title}</strong>
+            <button className="ghost small" onClick={() => setDetail(null)}>Close</button>
+          </div>
+          <p className="muted">{detail.content || '(no content)'}</p>
+        </div>
+      )}
+
       {summary && (
         <div className="table-wrap">
           <table>
@@ -127,6 +139,7 @@ export default function NotesPanel() {
                 {n.content && <p className="muted">{n.content}</p>}
               </div>
               <div className="actions tight">
+                <button className="ghost small" onClick={() => view(n)} disabled={busy}>View</button>
                 <button className="ghost small" onClick={() => edit(n)} disabled={busy}>Edit</button>
                 <button className="ghost small" onClick={() => remove(n)} disabled={busy}>Delete</button>
               </div>

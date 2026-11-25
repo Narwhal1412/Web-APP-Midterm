@@ -1,6 +1,7 @@
 import { requestLog } from '../lib/requestLog';
 
-const BASE = '/api'; // relative: nginx (docker) or the Vite proxy (dev) forwards it to the backend
+// Read from .env (VITE_API_BASE). Falls back to '/api': nginx (docker) or the Vite proxy (dev) forwards it to the backend.
+const BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export const tokenStore = {
   get: () => localStorage.getItem('token'),
@@ -59,6 +60,7 @@ export const api = {
   logout: () => request('POST', '/logout'),
   me: () => request('GET', '/user'),
   notes: () => request('GET', '/notes'),
+  note: (id) => request('GET', `/notes/${id}`),
   createNote: (n) => request('POST', '/notes', { body: n }),
   updateNote: (id, n) => request('PUT', `/notes/${id}`, { body: n }),
   deleteNote: (id) => request('DELETE', `/notes/${id}`),

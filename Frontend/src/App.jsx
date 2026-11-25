@@ -5,10 +5,9 @@ import StatusPanel from './components/StatusPanel';
 import AuthPanel from './components/AuthPanel';
 import NotesPanel from './components/NotesPanel';
 import OutagePanel from './components/OutagePanel';
-import RequestLog from './components/RequestLog';
 
 export default function App() {
-  const monitor = useHealthMonitor(1000);
+  const monitor = useHealthMonitor(5000);
   const auth = useAuth();
 
   const failing = [monitor.snapshot?.db === 'down' && 'database', monitor.snapshot?.redis === 'down' && 'Redis'].filter(Boolean);
@@ -33,7 +32,6 @@ export default function App() {
         <StatusPanel monitor={monitor} />
         {auth.token ? <NotesPanel /> : <AuthPanel auth={auth} />}
         <OutagePanel monitor={monitor} />
-        <RequestLog />
       </main>
     </div>
   );
