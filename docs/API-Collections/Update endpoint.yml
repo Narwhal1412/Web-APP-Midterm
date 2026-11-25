@@ -1,0 +1,63 @@
+info:
+  name: Update endpoint
+  type: http
+
+http:
+  method: GET
+  url: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  info:
+    name: Update Note Endpoint
+    type: http
+    seq: 3
+
+  http:
+    method: PUT
+    url: http://localhost:8000/api/notes/1
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: Authorization
+        value: Bearer YOUR_SANCTUM_TOKEN
+    body:
+      type: json
+      data: |-
+        {
+          "title": "New title",
+          "content": "New content"
+        }
+    auth: inherit
+
+  runtime:
+    assertions:
+      - expression: res.status
+        operator: eq
+        value: "200"
+
+  settings:
+    encodeUrl: true
+    timeout: 0
+    followRedirects: true
+    maxRedirects: 5
+    forwardAuthorizationHeader: true
+
+  docs: |-
+
+    ### `PUT /api/notes/{id}`
+    Updates a note belonging to the authenticated user.
+
+    **Responses**
+    * **200 OK**
+    ```json
+    {
+      "message": "Updated"
+    }

@@ -18,4 +18,23 @@ class NoteController extends Controller
         // Tra ket qua ve dang JSON, ma 200 la thanh cong
         return response()->json($notes, 200);
     }
+
+    public function update(Request $request, $id)
+    {
+        // Lay id cua nguoi dang dang nhap
+        $userId = $request->user()->id;
+
+        // Cap nhat ghi chu theo id va dung cua nguoi dang dang nhap
+        DB::table('notes')
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->update([
+                'title' => $request->title,
+                'content' => $request->content,
+            ]);
+
+        // Tra ket qua thanh cong
+        return response()->json(['message' => 'Updated'], 200);
+    }
+
 }
