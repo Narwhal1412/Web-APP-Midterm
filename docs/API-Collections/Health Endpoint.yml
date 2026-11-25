@@ -13,8 +13,13 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |
+  Checks API and database connectivity. No request body.
+  * **200 OK** — Service and database are up.
+  * **503 Service Unavailable** — Database is unreachable.
+
   | Status | Response |
   |--------|------|
   | 200    | {"db":"ok","container":"ID"} |

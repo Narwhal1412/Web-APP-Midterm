@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Health route
+// Health endpoint
 Route::get('/health', function () {
     try {
         // Establish the current PDO connection
@@ -25,3 +26,6 @@ Route::get('/health', function () {
     $db === 'ok' ? 200 : 503
     );
 });
+
+// Register endpoint
+Route::post('/register', [AuthController::class, 'register']);
