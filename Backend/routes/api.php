@@ -36,3 +36,9 @@ Route::get('/notes', [NoteController::class, 'index'])->middleware('auth:sanctum
 
 // Update endpoint
 Route::put('/notes/{id}', [NoteController::class, 'update'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/notes', [NoteController::class, 'index']);
+    Route::post('/notes', [NoteController::class, 'store']);
+    Route::put('/notes/{id}', [NoteController::class, 'update']);
+});
