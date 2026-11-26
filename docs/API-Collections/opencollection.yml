@@ -28,7 +28,7 @@ docs:
     | `POST` | `/api/user` | Yes | `200`, `422` |
     | `POST` | `/api/notes` | Yes | `201`, `401`, `422` |
     | `GET` | `/api/notes` | Yes | `200`, `401` |
-    | `GET` | `/api/notes/{id}` | Yes | `200`, `401` |
+    | `GET` | `/api/notes/{id}` | Yes | `200`, `401`, `404` |
     | `PUT` | `/api/notes/{id}` | Yes | `200`, `404`, `422`, `401` |
 
     ## Refer to each endpoints docs for more details on request/response.

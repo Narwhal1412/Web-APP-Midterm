@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8000/api/notes/1
+  url: http://localhost:8000/api/notes/4
   headers:
     - name: Authorization
       value: Bearer wcMsjOvmETw5MMfwtrqb9cn1nTcqaySrV4CyBHQe33954ff3
@@ -24,3 +24,4 @@ docs: |-
   **Responses**
   * **200 Successfull**
   * **401 Unauthenticated** — Missing/Invalid token.
+  * **404 Not Found** — Invalid note index.
