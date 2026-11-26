@@ -25,7 +25,16 @@ export default function AuthPanel({ auth }) {
   };
 
   return (
-    <section className="card span-2" aria-labelledby="auth-h">
+    <section className="auth" aria-labelledby="auth-h">
+      <aside className="auth-side">
+        <p className="auth-title">Notes, served from cache when they can be.</p>
+        <p className="muted">Every list request shows where the answer came from, and how long it took.</p>
+        <ul className="legend">
+          <li><span className="src hit">hit</span> read from Redis</li>
+          <li><span className="src miss">miss</span> read from the database</li>
+        </ul>
+      </aside>
+      <div className="auth-form">
       <h2 id="auth-h">{mode === 'login' ? 'Log in' : 'Create an account'}</h2>
       <form onSubmit={submit} className="form" noValidate>
         {mode === 'register' && (
@@ -44,6 +53,7 @@ export default function AuthPanel({ auth }) {
           </button>
         </div>
       </form>
+      </div>
     </section>
   );
 }

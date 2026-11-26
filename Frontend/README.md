@@ -47,6 +47,7 @@ Return the same body with status 503 when something is down, so the page can say
 - **Service status**: Web/API, Database, Redis. "Check health" calls `GET /api/health` once and prints status code and time.
 - **Notes**: create, edit, delete, refresh. A badge shows HIT or MISS and the measured time of the last list request.
   "Run 20 list requests" gives a small table (count, average, min, max per HIT / MISS) for the report.
+- **Pages**: the home page is Log in (or Notes once signed in). The **System status** button opens a separate page (`#status`) with Service status, Outage timeline and Request log; **Back** returns.
 - **Outage timeline**: when the server goes down and how long until it is back (about +/- 5 s, health is polled every 5 s). Cause an outage with
   `docker compose kill backend`, then check `docker compose logs backend` and `docker compose ps`.
 
