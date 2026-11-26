@@ -27,6 +27,13 @@ class NoteController extends Controller
 
         return response()->json($notes,200);
     }
+    // GET /api/notes/{id}
+    // Read {id} note
+    public function readid(Request $request, $id){
+        $note = $request->user()->notes()->findOrFail($id);
+        
+        return response()->json($note,200);
+    }
 
     // PUT /api/notes/{id} -> 200 {} or 404
     // Update note
