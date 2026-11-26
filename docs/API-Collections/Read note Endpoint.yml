@@ -19,16 +19,8 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  **Request Body**
-  * `title` *(string, required, max 255)*
-  * `content` *(string, required)*
+  # Return all notes from the user
 
   **Responses**
-  * **201 Note Created**
-  ```json
-  {
-    "note": {}
-  }
-  ```
-  * **422 Unprocessable Entity** — Missing/Invalid fields.
+  * **200 Successfull**
   * **401 Unauthenticated** — Missing/Invalid token.
