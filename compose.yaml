@@ -55,7 +55,7 @@ services:
   build: ./Frontend
   environment:
   #  Talk to the backend via docker network 
-   VITE_BASE: http://webapp_backend:8000
+   VITE_BACKEND: http://webapp_backend:8000
   depends_on:
    - backend
 
