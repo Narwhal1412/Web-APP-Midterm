@@ -21,7 +21,11 @@ services:
  db: # Hidden, communicate via docker network   
   networks:
    - komodo_default
-
+ 
+ redis:
+  networks:
+   - komodo_default
+   
 networks:
  komodo_default:
   external: true
