@@ -5,12 +5,12 @@ services:
  frontend:
   labels:
    - "traefik.enable=true"
-   - "traefik.http.routers.webapp-midterm-dev.rule=Host(`${APP_HOST}`)"
-   - "traefik.http.routers.webapp-midterm-dev.entrypoints=websecure"
-   - "traefik.http.routers.webapp-midterm-dev.tls=true"
+   - "traefik.http.routers.${ROUTER}.rule=Host(`${APP_HOST}`)"
+   - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
+   - "traefik.http.routers.${ROUTER}.tls=true"
 
    # Authentication middleware
-   - "traefik.http.routers.webapp-midterm-dev.middlewares=authentik@docker"
+   - "traefik.http.routers.${ROUTER}.middlewares=authentik@docker"
   networks:
    - komodo_default
 
@@ -25,7 +25,7 @@ services:
  redis:
   networks:
    - komodo_default
-   
+
 networks:
  komodo_default:
   external: true
