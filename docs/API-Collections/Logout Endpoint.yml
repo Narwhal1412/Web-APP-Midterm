@@ -1,7 +1,7 @@
 info:
   name: Logout Endpoint
   type: http
-  seq: 1
+  seq: 3
 
 http:
   method: POST

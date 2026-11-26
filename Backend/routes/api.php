@@ -16,6 +16,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //CRUD
     // Create note endpoint
     Route::post("/notes", [NoteController::class, 'create']);
+    // Read note endpoint
+    Route::get('/notes', [NoteController::class, 'read']);
 });
 
 // Health endpoint

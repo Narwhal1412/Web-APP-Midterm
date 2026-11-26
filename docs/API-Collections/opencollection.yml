@@ -26,7 +26,8 @@ docs:
     | `POST` | `/api/login` | No | `200`, `422` |
     | `POST` | `/api/logout` | Yes | `204`, `401` |
     | `POST` | `/api/user` | Yes | `200`, `422` |
-    | `POST` | `/api/notes` | Yes | `200`, `401`, `422` |
+    | `GET` | `/api/notes` | Yes | `200`, `401` |
+    | `POST` | `/api/notes` | Yes | `201`, `401`, `422` |
 
     ## Refer to each endpoints docs for more details on request/response.
     Usually Status code 500 means database connection error, check health endpoint.

@@ -18,5 +18,12 @@ class NoteController extends Controller
         return response()->json($note,201);
     }
 
+    // Read note
+    public function read(Request $request){
+
+        $notes = $request->user()->notes()->latest()->get();
+
+        return response()->json($notes,200);
+    }
     
 }
