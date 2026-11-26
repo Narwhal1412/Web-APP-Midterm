@@ -1,32 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Protected route outside of group
+Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
 
-// Health endpoint
-Route::get('/health', function () {
-    try {
-        // Establish the current PDO connection
-        DB::connection()->getPdo();
-        $db = 'ok'; 
-    } catch (\Throwable $e) {
-        $db = 'down';
-    }
+// Prottected routes sharing middleware via a group
+Route::middleware('auth:sanctum')->group(function () {
 
-    return response() -> json(
-        // Reports ok or down
-        // Shows the current running container id with gethostname()
-    ['db' => $db, 'container' => gethostname()],
-    $db === 'ok' ? 200 : 503
-    );
 });
 
+// Health endpoint
+Route::get('/health', [HealthController::class, 'health']);
+
+// Public Routes
 // Register endpoint
 Route::post('/register', [AuthController::class, 'register']);
 

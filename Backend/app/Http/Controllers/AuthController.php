@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -28,7 +27,7 @@ class AuthController extends Controller
     
     // login logic
     public function login(LoginRequest $request){
-
+        // Validate user input
         $credentials = $request->validated();
 
         // Basically SELECT * FROM user WHERE email=$email LIMIT 1 
@@ -47,5 +46,19 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $user->createToken('web')->plainTextToken
         ], 200);
+    }
+    // user handler
+    public function user(Request $request){
+        return response()->json($request->user(),200);
+    }
+
+    // logout handler
+    public function logout(Request $request){
+            // Deletes only the token used on this request,
+            // Leave the other devices logged-in
+        $request->user()->currentAccessToken()->delete();
+
+        // 204 no content
+        return response()->noContent();
     }
 }
