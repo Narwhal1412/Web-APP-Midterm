@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notes/{id}', [NoteController::class, 'readid']);
     // Update note endpoint
     Route::put('/notes/{id}', [NoteController::class, 'update']);
+    // Delete note endpoint
+    Route::delete('/notes/{id}', [NoteController::class, 'delete']);
 });
 
 // Health endpoint

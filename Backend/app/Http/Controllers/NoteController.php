@@ -35,7 +35,7 @@ class NoteController extends Controller
         return response()->json($note,200);
     }
 
-    // PUT /api/notes/{id} -> 200 {} or 404
+    // PUT /api/notes/{id} -> 200 {} or 404 or 401
     // Update note
     public function update(UpdateNoteRequest $request, int $id){
         // find the note with the specified id
@@ -44,6 +44,15 @@ class NoteController extends Controller
         $note->update($request->validated());
 
         return response()->json($note, 200);
+    }
+    
+    // DELETE /api/notes/{id} -> 200 {} or 404 or 401
+    // Delete note
+    public function delete(Request $request, int $id){
+        $note = $request->user()->notes()->findOrFail($id);
+        $note->delete();
+
+        return response()->noContent();
     }
     
 }
