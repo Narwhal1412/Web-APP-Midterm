@@ -9,9 +9,9 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-# Document this image exposes port 4173,
+# Document this image exposes port 80,
 # Which is Vite preview port
-EXPOSE 4173
+EXPOSE 80
 
 # This command runs whenever the container starts
 CMD ["npm", "run", "preview"]
