@@ -1,0 +1,27 @@
+info:
+  name: Logout Endpoint
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8000/api/logout
+  headers:
+    - name: Authorization
+      value: Bearer FWezh9smezJ8jKagg8cdFambg6NnvQ6jb3TZSXuMcb87c6e5
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  Delete the requested token from the database.
+
+  **Responses**
+  * **204 Deleted successfully**
+
+  * **401 Unauthorized** — Missing/Invalid token.

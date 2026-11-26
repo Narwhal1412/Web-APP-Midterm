@@ -1,0 +1,42 @@
+info:
+  name: Update Endpoint
+  type: http
+  seq: 9
+
+http:
+  method: PUT
+  url: http://localhost:8000/api/notes/2
+  headers:
+    - name: Authorization
+      value: Bearer wcMsjOvmETw5MMfwtrqb9cn1nTcqaySrV4CyBHQe33954ff3
+  body:
+    type: json
+    data: |-
+      {
+        "title": "ONLY THIS HAVE BEEN CHANGED",
+        "content": "THIS HAVE ALSO BEEN CHANGED"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  **Request Body**
+  * `title` *(somtimes, string, required, max 255)*
+  * `content` *(somtimes, string, required)*
+
+  **Responses**
+  * **200 Note Updated**:
+  ```json
+  {
+    "note": {}
+  }
+  ```
+  * **404 Not Found** — Missing/Invalid Note index.
+  * **422 Unprocessable Entity** — Missing/Invalid fields.
+  * **401 Unauthenticated** — Missing/Invalid token.
