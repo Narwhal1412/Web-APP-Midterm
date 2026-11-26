@@ -1,4 +1,5 @@
-# It should not containt any ports
+# This file should not contain any port mapping, 
+# That is located inside compose.override.yaml for local deployment
 services:
  db:
   container_name: webapp_db
@@ -49,9 +50,12 @@ services:
    interval: 5s
    retries: 10
   
- # Frontend 
+ # Frontend
  frontend:
   build: ./Frontend
+  environment:
+  #  Talk to the backend via docker network 
+   VITE_BASE: http://webapp_backend:8000
   depends_on:
    - backend
 
