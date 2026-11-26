@@ -25,7 +25,7 @@ docs:
     | `POST` | `/api/register` | No | `201`, `422` |
     | `POST` | `/api/login` | No | `200`, `422` |
     | `POST` | `/api/logout` | Yes | `204`, `401` |
-    | `POST` | `/api/user` | Yes | `200`, `422` |
+    | `GET` | `/api/user` | Yes | `200`, `401` |
     | `POST` | `/api/notes` | Yes | `201`, `401`, `422` |
     | `GET` | `/api/notes` | Yes | `200`, `401` |
     | `GET` | `/api/notes/{id}` | Yes | `200`, `401`, `404` |
