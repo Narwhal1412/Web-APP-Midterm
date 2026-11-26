@@ -1,13 +1,17 @@
-# Multi-stage build: Node is only used to build, the final image is plain nginx + static files.
-FROM node:20-alpine AS build
+# Baseline
+# Image taken from: https://hub.docker.com/_/node
+FROM node:26 
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+
 COPY . .
+
+RUN npm install
 RUN npm run build
 
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD wget -qO- http://127.0.0.1/ >/dev/null || exit 1
+# Document this image exposes port 4173,
+# Which is Vite preview port
+EXPOSE 4173
+
+# This command runs whenever the container starts
+CMD ["npm", "run", "preview", "--", "--host 0.0.0.0", "--port 4173"]
