@@ -9,7 +9,8 @@ Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum')
 
 // Prottected routes sharing middleware via a group
 Route::middleware('auth:sanctum')->group(function () {
-
+    // Logout endpoint
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 // Health endpoint

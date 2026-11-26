@@ -24,6 +24,7 @@ docs:
     | `GET` | `/api/health` | No | `200`, `503` |
     | `POST` | `/api/register` | No | `201`, `422` |
     | `POST` | `/api/login` | No | `200`, `422` |
+    | `POST` | `/api/logout` | Yes | `204`, `401` |
     | `POST` | `/api/user` | Yes | `200`, `422` |
 
     ## Refer to each endpoints docs for more details on request/response.
