@@ -7,6 +7,8 @@ import AuthPanel from './components/AuthPanel';
 import NotesPanel from './components/NotesPanel';
 import OutagePanel from './components/OutagePanel';
 import RequestLog from './components/RequestLog';
+import BackgroundPicker from './components/BackgroundPicker';
+import Logo from './components/Logo';
 
 const fromHash = () => (window.location.hash === '#status' ? 'status' : 'main');
 
@@ -26,21 +28,43 @@ export default function App() {
   const failing = [monitor.snapshot?.db === 'down' && 'database', monitor.snapshot?.redis === 'down' && 'Redis'].filter(Boolean);
   const detail = monitor.state === 'degraded' && failing.length ? `(${failing.join(' and ')} not responding)` : '';
 
+  const inApp = page === 'main' && auth.token;
+  const unverified = inApp && auth.user && (auth.user.email_verified_at === null || auth.user.activated === false || auth.user.is_active === false);
+
+  if (inApp) {
+    return (
+      <div className="app">
+        <RebootBanner state={monitor.state} detail={detail} />
+        <header className="appbar">
+          <div className="brand">
+            <Logo className="brand-ico" />
+            <b>Notes</b>
+          </div>
+          <div className="who">
+            <BackgroundPicker />
+            <button className="ghost status-link" onClick={() => go('status')}><span className={`dot ${monitor.state || ''}`} aria-hidden="true" />System status</button>
+            <button className="avatar" title="Log out" aria-label="Log out" onClick={auth.logout}>{(auth.user?.name || auth.user?.email || '?')[0].toUpperCase()}</button>
+          </div>
+        </header>
+        {unverified && <div className="notice" role="status"><b>Your account is not activated.</b> Check your email and open the activation link to finish setting up.</div>}
+        <NotesPanel />
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <RebootBanner state={monitor.state} detail={detail} />
       <header className="top">
         <div className="brand">
-          <svg className="logo" viewBox="0 0 32 32" aria-hidden="true">
-            <rect width="32" height="32" rx="8" fill="#ff7a3d" />
-            <g fill="#2a1100"><rect x="6" y="13" width="5" height="5" /><rect x="13" y="13" width="5" height="5" /><rect x="20" y="13" width="5" height="5" /><rect x="13" y="6" width="5" height="5" /></g>
-          </svg>
+          <Logo className="logo" />
           <div>
-            <h1>{page === 'status' ? 'System status' : 'Docker Stack Monitor'}</h1>
-            <p>{page === 'status' ? 'Health of the web app, database and Redis' : 'Web app, database and Redis running under docker-compose'}</p>
+            <h1>{page === 'status' ? 'System status' : 'Notes App'}</h1>
+            <p>{page === 'status' ? 'Health of the web app, database and Redis' : 'Create, edit and manage your notes'}</p>
           </div>
         </div>
         <div className="who">
+          <BackgroundPicker />
           {page === 'status' ? (
             <button className="ghost" onClick={() => go('main')}>← Back</button>
           ) : (
