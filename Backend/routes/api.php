@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("/notes", [NoteController::class, 'create']);
     // Read note endpoint
     Route::get('/notes', [NoteController::class, 'read']);
+    // Update note endpoint
+    Route::put('/notes/{id}', [NoteController::class, 'update']);
 });
 
 // Health endpoint
