@@ -1,0 +1,41 @@
+info:
+  name: Create note Endpoint
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:8000/api/notes
+  headers:
+    - name: Authorization
+      value: Bearer wcMsjOvmETw5MMfwtrqb9cn1nTcqaySrV4CyBHQe33954ff3
+  body:
+    type: json
+    data: |-
+      {
+        "title": "THIS IS ANOTHER TEST",
+        "content": "This is the content of my first note!!!"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  **Request Body**
+  * `title` *(string, required, max 255)*
+  * `content` *(string, required)*
+
+  **Responses**
+  * **201 Note Created**
+  ```json
+  {
+    "note": {}
+  }
+  ```
+  * **422 Unprocessable Entity** — Missing/Invalid fields.
+  * **401 Unauthenticated** — Missing/Invalid token.

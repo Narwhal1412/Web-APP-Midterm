@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -11,6 +12,10 @@ Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum')
 Route::middleware('auth:sanctum')->group(function () {
     // Logout endpoint
     Route::post('/logout', [AuthController::class, 'logout']);
+    
+    //CRUD
+    // Create note endpoint
+    Route::post("/notes", [NoteController::class, 'create']);
 });
 
 // Health endpoint
