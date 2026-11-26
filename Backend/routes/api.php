@@ -29,3 +29,6 @@ Route::get('/health', function () {
 
 // Register endpoint
 Route::post('/register', [AuthController::class, 'register']);
+
+// Login endpoint
+Route::post('login', [AuthController::class, 'login']);
