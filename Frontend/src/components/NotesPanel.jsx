@@ -51,7 +51,14 @@ function usePageSize(layout, key) {
 }
 
 const asList = (b) => (Array.isArray(b) ? b : b?.data ?? b?.notes ?? []);
-const errText = (e) => (e.status ? `Request failed (${e.status}).` : e.message === 'network error' ? 'Cannot reach the API.' : e.message);
+// Shows the backend's validation message (HTTP 422) when there is one, e.g. "The content field is required."
+const errText = (e) => {
+  if (e.status === 422) {
+    const first = Object.values(e.body?.errors || {}).flat()[0];
+    return first || e.body?.message || 'Please check the form.';
+  }
+  return e.status ? `Request failed (${e.status}).` : e.message === 'network error' ? 'Cannot reach the API.' : e.message;
+};
 
 export default function NotesPanel() {
   const [showCache] = useShowCache();
@@ -97,6 +104,7 @@ export default function NotesPanel() {
   const save = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return setError('Enter a title.');
+    if (!form.content.trim()) return setError('Enter some content — the content field is required.');
     setBusy(true); setError('');
     try {
       if (modal.note) await api.updateNote(modal.note.id, form); else await api.createNote(form);
