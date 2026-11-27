@@ -17,11 +17,48 @@ const I = {
   warn: <Ico><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></Ico>,
 };
 
-// Notes per page, chosen by the two layout buttons.
+// Notes per page.
+// Phone / narrow screens: chosen by the two layout buttons (list 20, grid 5).
+// Desktop: as many notes as fill the visible area, then the next page starts.
 const PAGE_SIZE = { list: 20, grid: 5 };
+const DESKTOP_MIN_WIDTH = 900;
+const ROW_H = 150;         // note card min height
+const GAP = 14;            // gap between cards
+const PAGER_H = 72;        // the fixed pager bar at the bottom
+const FALLBACK_TOP = 180;  // where the list starts if it is not on screen yet
+
+// Notes that fit between the top of the list and the pager bar.
+function fitCount(layout) {
+  const w = window.innerWidth, h = window.innerHeight;
+  if (w < DESKTOP_MIN_WIDTH) return PAGE_SIZE[layout];
+  const el = document.querySelector('.masonry, .stack');
+  const top = el ? el.getBoundingClientRect().top + window.scrollY : FALLBACK_TOP;
+  const rows = Math.max(1, Math.floor((h - top - PAGER_H - 8 + GAP) / (ROW_H + GAP)));
+  if (layout === 'list') return rows;
+  const cols = Math.max(1, Math.min(4, Math.floor((w - 220 - 44 + GAP) / (220 + GAP))));
+  return cols * rows;
+}
+
+function usePageSize(layout, key) {
+  const [size, setSize] = useState(() => fitCount(layout));
+  useEffect(() => {
+    const update = () => setSize(fitCount(layout));
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [layout, key]);
+  return size;
+}
 
 const asList = (b) => (Array.isArray(b) ? b : b?.data ?? b?.notes ?? []);
-const errText = (e) => (e.status ? `Request failed (${e.status}).` : e.message === 'network error' ? 'Cannot reach the API.' : e.message);
+// Shows the backend's validation message (HTTP 422) when there is one, e.g. "The content field is required."
+const errText = (e) => {
+  if (e.status === 422) {
+    const first = Object.values(e.body?.errors || {}).flat()[0];
+    return first || e.body?.message || 'Please check the form.';
+  }
+  return e.status ? `Request failed (${e.status}).` : e.message === 'network error' ? 'Cannot reach the API.' : e.message;
+};
 
 export default function NotesPanel() {
   const [showCache] = useShowCache();
@@ -32,7 +69,7 @@ export default function NotesPanel() {
   const [last, setLast] = useState(null);
   const [query, setQuery] = useState('');
   const [layout, setLayout] = useState(() => { try { return localStorage.getItem('notes-layout') === 'list' ? 'list' : 'grid'; } catch { return 'grid'; } });
-  const pageSize = PAGE_SIZE[layout];
+  const pageSize = usePageSize(layout, `${notes.length > 0}-${showCache}-${loading}`);
   const [modal, setModal] = useState(null); // { note, edit }
   const [form, setForm] = useState({ title: '', content: '' });
   const [busy, setBusy] = useState(false);
@@ -55,7 +92,7 @@ export default function NotesPanel() {
     return q ? notes.filter((n) => `${n.title} ${n.content}`.toLowerCase().includes(q)) : notes;
   }, [notes, query]);
 
-  // Paging: list button = 20 per page, grid button = 5 per page.
+  // Paging: fills the screen on desktop; list 20 / grid 5 on phones.
   const pages = Math.max(1, Math.ceil(shown.length / pageSize));
   const current = Math.min(pageNo, pages);
   const visible = shown.slice((current - 1) * pageSize, current * pageSize);
@@ -67,6 +104,7 @@ export default function NotesPanel() {
   const save = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return setError('Enter a title.');
+    if (!form.content.trim()) return setError('Enter some content — the content field is required.');
     setBusy(true); setError('');
     try {
       if (modal.note) await api.updateNote(modal.note.id, form); else await api.createNote(form);
@@ -132,8 +170,8 @@ export default function NotesPanel() {
             {pages > 1 && (
               <nav className="pager" aria-label="Pages">
                 <button className="ghost" disabled={current === 1} onClick={() => setPageNo(current - 1)}>← Prev</button>
-                <span>Page {current} / {pages}</span>
-                <button className="ghost" disabled={current === pages} onClick={() => setPageNo(current + 1)}>Next →</button>
+                <span className="pager-info"><b>{current}</b> / {pages}</span>
+                <button className="primary" disabled={current === pages} onClick={() => setPageNo(current + 1)}>Next →</button>
               </nav>
             )}
           </>
