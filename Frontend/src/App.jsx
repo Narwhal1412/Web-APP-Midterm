@@ -29,7 +29,6 @@ export default function App() {
   const detail = monitor.state === 'degraded' && failing.length ? `(${failing.join(' and ')} not responding)` : '';
 
   const inApp = page === 'main' && auth.token;
-  const unverified = inApp && auth.user && (auth.user.email_verified_at === null || auth.user.activated === false || auth.user.is_active === false);
 
   if (inApp) {
     return (
@@ -42,11 +41,14 @@ export default function App() {
           </div>
           <div className="who">
             <BackgroundPicker />
-            <button className="ghost status-link" onClick={() => go('status')}><span className={`dot ${monitor.state || ''}`} aria-hidden="true" />System status</button>
-            <button className="avatar" title="Log out" aria-label="Log out" onClick={auth.logout}>{(auth.user?.name || auth.user?.email || '?')[0].toUpperCase()}</button>
+            <button className="ghost status-link" aria-label="System status" onClick={() => go('status')}><span className={`dot ${monitor.state || ''}`} aria-hidden="true" /><span className="lbl">System status</span></button>
+            <span className="avatar" title={auth.user?.email || ''} aria-hidden="true">{(auth.user?.name || auth.user?.email || '?')[0].toUpperCase()}</span>
+            <button className="ghost logout-btn" aria-label="Log out" onClick={auth.logout}>
+              <svg className="bg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
+              <span className="lbl">Log out</span>
+            </button>
           </div>
         </header>
-        {unverified && <div className="notice" role="status"><b>Your account is not activated.</b> Check your email and open the activation link to finish setting up.</div>}
         <NotesPanel />
       </div>
     );

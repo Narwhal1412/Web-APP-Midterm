@@ -119,7 +119,7 @@ input:focus, textarea:focus { border-color: var(--accent); outline: none; box-sh
 .seg button { border-radius: 0; background: transparent; color: var(--muted); padding: 6px 11px; display: inline-grid; place-items: center; }
 .seg button:hover:not(:disabled) { filter: none; color: var(--ink); }
 .seg button[aria-pressed='true'] { background: rgba(13, 183, 168, 0.18); color: var(--accent); }
-.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 12px; margin-top: 14px; }
 .note-card { display: flex; flex-direction: column; gap: 8px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
 .note-card.editing { border-color: var(--accent); }
 .note-card h3 { overflow-wrap: anywhere; }
@@ -206,7 +206,7 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 .state-ico svg { width: 30px; height: 30px; color: var(--accent); }
 .masonry { columns: 4 220px; column-gap: 14px; }
 .masonry .note { break-inside: avoid; margin-bottom: 14px; }
-.stack { display: grid; gap: 10px; max-width: 760px; }
+.stack { display: grid; gap: 10px; max-width: none; width: 100%; }
 .note { position: relative; border-radius: 12px; padding: 14px 16px 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
 .note::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 1px; border-radius: 12px 12px 0 0; background: linear-gradient(90deg, transparent, var(--accent-line), transparent); opacity: .7; }
 .note:hover, .note:focus-visible { border-color: var(--accent-line); box-shadow: 0 10px 32px rgba(92, 84, 240, .22); }
@@ -266,3 +266,52 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 /* header (and its settings popover) stacks above page content */
 .appbar, .top { position: relative; z-index: 15; }
 .nav .nav-logo { width: 20px; height: 20px; flex: none; }
+.bg-ico { width: 18px; height: 18px; flex: none; }
+.avatar { display: grid; place-items: center; font-weight: 700; flex: none; }
+.logout-btn { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---- mobile ---- */
+@media (max-width: 640px) {
+  .appbar { padding: 8px 12px; gap: 8px; }
+  .appbar .who { gap: 6px; }
+  .appbar .who .lbl { display: none; }             /* icon-only header buttons */
+  .appbar .who .ghost { padding: 8px 10px; }
+  .appbar .brand b { font-size: .95rem; }
+  .avatar { display: none; }
+  .bgpick { position: static; }                    /* popover anchors to the header instead */
+  .bg-pop { right: 12px; left: 12px; width: auto; max-width: 320px; margin-left: auto; }
+  .content { padding: 12px 12px 32px; }
+  .toolbar { gap: 8px; margin-bottom: 12px; }
+  .toolbar .seg { margin-left: auto; }
+  .toolbar .primary { flex: 0 0 auto; }
+  .page { padding: 16px 12px 40px; }
+  .top { gap: 8px; }
+  .dialog { padding: 16px; max-height: 92vh; }
+  .card-actions { opacity: 1; }
+}
+
+/* ---- keep the status page inside the screen on mobile ---- */
+.page, .grid > *, .cards > *, .card { min-width: 0; }
+.card { overflow-wrap: anywhere; }
+dl div { gap: 12px; }
+dd { text-align: right; min-width: 0; overflow-wrap: anywhere; }
+.row-between { flex-wrap: wrap; }
+.table-wrap { max-width: 100%; }
+@media (max-width: 800px) {
+  .grid, .cards { grid-template-columns: minmax(0, 1fr); }
+  .page { padding-left: 12px; padding-right: 12px; }
+  .card { padding: 14px; }
+}
+
+/* ---- bigger note cards, with a short preview of the content ---- */
+.note { min-height: 150px; padding: 18px 20px 14px; display: flex; flex-direction: column; }
+.note h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.note p { font-size: .95rem; line-height: 1.5; -webkit-line-clamp: 4; flex: 1; }
+.note .card-actions { margin-top: 12px; }
+@media (max-width: 640px) {
+  .note { min-height: 140px; padding: 16px 16px 12px; }
+  .note h3 { font-size: 1.1rem; }
+  .note p { -webkit-line-clamp: 3; }
+}
+
+.pager { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 18px 0 8px; color: var(--muted); font-size: .9rem; }
