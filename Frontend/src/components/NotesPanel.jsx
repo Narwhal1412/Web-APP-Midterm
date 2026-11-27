@@ -17,17 +17,22 @@ const I = {
   warn: <Ico><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></Ico>,
 };
 
+// Notes per page, chosen by the two layout buttons.
+const PAGE_SIZE = { list: 20, grid: 5 };
+
 const asList = (b) => (Array.isArray(b) ? b : b?.data ?? b?.notes ?? []);
 const errText = (e) => (e.status ? `Request failed (${e.status}).` : e.message === 'network error' ? 'Cannot reach the API.' : e.message);
 
 export default function NotesPanel() {
   const [showCache] = useShowCache();
+  const [pageNo, setPageNo] = useState(1);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [last, setLast] = useState(null);
   const [query, setQuery] = useState('');
   const [layout, setLayout] = useState(() => { try { return localStorage.getItem('notes-layout') === 'list' ? 'list' : 'grid'; } catch { return 'grid'; } });
+  const pageSize = PAGE_SIZE[layout];
   const [modal, setModal] = useState(null); // { note, edit }
   const [form, setForm] = useState({ title: '', content: '' });
   const [busy, setBusy] = useState(false);
@@ -49,6 +54,12 @@ export default function NotesPanel() {
     const q = query.trim().toLowerCase();
     return q ? notes.filter((n) => `${n.title} ${n.content}`.toLowerCase().includes(q)) : notes;
   }, [notes, query]);
+
+  // Paging: list button = 20 per page, grid button = 5 per page.
+  const pages = Math.max(1, Math.ceil(shown.length / pageSize));
+  const current = Math.min(pageNo, pages);
+  const visible = shown.slice((current - 1) * pageSize, current * pageSize);
+  useEffect(() => { setPageNo(1); }, [query, layout]);
 
   const open = (note, edit) => { setError(''); setForm({ title: note?.title || '', content: note?.content || '' }); setModal({ note, edit }); };
   const close = () => setModal(null);
@@ -110,7 +121,7 @@ export default function NotesPanel() {
         ) : (
           <>
             <div className={layout === 'grid' ? 'masonry' : 'stack'}>
-              {shown.map((n) => (
+              {visible.map((n) => (
                 <article key={n.id} className="note" tabIndex={0} onClick={() => open(n, false)} onKeyDown={(e) => e.key === 'Enter' && open(n, false)}>
                   <h3>{n.title}</h3>
                   <p>{n.content || 'No content'}</p>
@@ -118,6 +129,13 @@ export default function NotesPanel() {
                 </article>
               ))}
             </div>
+            {pages > 1 && (
+              <nav className="pager" aria-label="Pages">
+                <button className="ghost" disabled={current === 1} onClick={() => setPageNo(current - 1)}>← Prev</button>
+                <span>Page {current} / {pages}</span>
+                <button className="ghost" disabled={current === pages} onClick={() => setPageNo(current + 1)}>Next →</button>
+              </nav>
+            )}
           </>
         )}
       </section>
