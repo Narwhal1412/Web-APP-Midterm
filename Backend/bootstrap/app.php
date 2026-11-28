@@ -13,10 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Stop auth middleware from looking up route('login') on API routes
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('api/*') ? null : '/login'
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
+            // Always return JSON errors (like 401/404/422) for /api/* routes
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();

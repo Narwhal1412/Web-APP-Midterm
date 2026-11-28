@@ -1,0 +1,44 @@
+info:
+  name: User endpoint
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:8000/api/user
+  headers:
+    - name: Authorization
+      value: Bearer 18|Ew9lArJIqP5GNpNzHo77UA1XUh0FkLSj7P1rrEfY03c5f041
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |
+  # Returns the current user based on the sanctum token.
+
+  **Responses**
+  * **200 Success**
+  ```json
+  {
+    "user": {
+      "id": 1,
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "email_verified_at": ...,
+      "created_at": "...",
+      "updated_at": "..."
+    }
+  }
+  ```
+  * **401 Unauthorized** — Missing/Invalid token.

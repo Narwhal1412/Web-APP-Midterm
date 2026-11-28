@@ -1,6 +1,8 @@
-# It should not containt any ports
+# This file should not contain any port mapping, 
+# That is located inside compose.override.yaml for local deployment
 services:
  db:
+  container_name: webapp_db
   image: mariadb:11
   environment:
    MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -8,8 +10,9 @@ services:
    MARIADB_USER: ${DB_USER}
    MARIADB_PASSWORD: ${DB_PASSWORD}
   volumes:
-   - db_data:/var/lib/mysql
-   - ./Database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+   - webapp_db_data:/var/lib/mysql
+   # Loads the default init database, when the database is empty
+   # - ./Database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
   healthcheck:
    test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
    interval: 10s
@@ -18,23 +21,43 @@ services:
  
  # Backend
  backend:
+  container_name: webapp_backend
   build: ./Backend
   environment:
-   DB_HOST: ${DB_HOST}
-   DB_PORT: ${DB_PORT}
-   DB_NAME: ${DB_NAME}
-   DB_USER: ${DB_USER}
+   APP_KEY: ${APP_KEY}
+   DB_CONNECTION: mariadb
+   DB_HOST: webapp_db
+   DB_DATABASE: ${DB_DATABASE}
+   DB_USERNAME: ${DB_USERNAME}
    DB_PASSWORD: ${DB_PASSWORD}
+   CACHE_STORE: redis
+   REDIS_HOST: redis
   depends_on:
    db: 
     # Passes health check
     condition: service_healthy
- 
- # Frontend 
+   redis:
+    condition: service_healthy
+  restart: unless-stopped
+
+ # redis
+ redis:
+  container_name: webapp_redis
+  image: redis:7-alpine
+  restart: unless-stopped
+  healthcheck:
+   test: ["CMD", "redis-cli", "ping"]
+   interval: 5s
+   retries: 10
+  
+ # Frontend
  frontend:
   build: ./Frontend
+  environment:
+  #  Talk to the backend via docker network 
+   VITE_BACKEND: http://webapp_backend:8000
   depends_on:
    - backend
 
 volumes:
- db_data:
+ webapp_db_data:
