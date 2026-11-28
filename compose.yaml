@@ -24,7 +24,7 @@ services:
   environment:
    APP_KEY: ${APP_KEY}
    DB_CONNECTION: mariadb
-   DB_HOST: webapp_db
+   DB_HOST: ${DB_HOST}
    DB_DATABASE: ${DB_DATABASE}
    DB_USERNAME: ${DB_USERNAME}
    DB_PASSWORD: ${DB_PASSWORD}
