@@ -3,7 +3,7 @@
 services:
    # Exposed via traefik
  frontend:
-  container_name: webapp_frontend
+  container_name: webapp_midterm_frontend
   labels:
    - "traefik.enable=true"
    - "traefik.http.routers.${ROUTER}.rule=Host(`${APP_HOST}`)"
@@ -14,17 +14,17 @@ services:
    - komodo_default
 
  backend: # Hidden, communicate via docker network
-  container_name: webapp_backend
+  container_name: webapp_midterm_backend
   networks:
    - komodo_default
 
  db: # Hidden, communicate via docker network
-  container_name: webapp_db
+  container_name: webapp_midterm_db
   networks:
    - komodo_default
  
  redis:
-  container_name: webapp_redis
+  container_name: webapp_midterm_redis
   networks:
    - komodo_default
 
