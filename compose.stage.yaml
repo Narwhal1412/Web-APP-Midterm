@@ -1,0 +1,31 @@
+# This file is the override when ran on a production server
+
+services:
+   # Exposed via traefik
+ frontend:
+  labels:
+   - "traefik.enable=true"
+   - "traefik.http.routers.${ROUTER}.rule=Host(`${APP_HOST}`)"
+   - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
+   - "traefik.http.routers.${ROUTER}.tls=true"
+
+   # Authentication middleware
+   - "traefik.http.routers.${ROUTER}.middlewares=authentik@docker"
+  networks:
+   - komodo_default
+
+ backend: # Hidden, communicate via docker network   
+  networks:
+   - komodo_default
+
+ db: # Hidden, communicate via docker network   
+  networks:
+   - komodo_default
+ 
+ redis:
+  networks:
+   - komodo_default
+
+networks:
+ komodo_default:
+  external: true
