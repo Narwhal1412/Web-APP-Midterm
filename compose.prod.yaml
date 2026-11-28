@@ -9,8 +9,6 @@ services:
    - "traefik.http.routers.${ROUTER}.entrypoints=websecure"
    - "traefik.http.routers.${ROUTER}.tls=true"
 
-   # Authentication middleware
-   - "traefik.http.routers.${ROUTER}.middlewares=authentik@docker"
   networks:
    - komodo_default
 
