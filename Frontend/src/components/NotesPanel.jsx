@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api/client';
 import { useShowCache } from '../lib/settings';
 import Logo from './Logo';
@@ -74,6 +74,8 @@ export default function NotesPanel() {
   const [form, setForm] = useState({ title: '', content: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [noContent, setNoContent] = useState(false);
+  const contentRef = useRef(null);
 
   const pickLayout = (l) => { setLayout(l); try { localStorage.setItem('notes-layout', l); } catch { /* ignore */ } };
 
@@ -98,13 +100,13 @@ export default function NotesPanel() {
   const visible = shown.slice((current - 1) * pageSize, current * pageSize);
   useEffect(() => { setPageNo(1); }, [query, layout]);
 
-  const open = (note, edit) => { setError(''); setForm({ title: note?.title || '', content: note?.content || '' }); setModal({ note, edit }); };
+  const open = (note, edit) => { setError(''); setNoContent(false); setForm({ title: note?.title || '', content: note?.content || '' }); setModal({ note, edit }); };
   const close = () => setModal(null);
 
   const save = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return setError('Enter a title.');
-    if (!form.content.trim()) return setError('Enter some content — the content field is required.');
+    if (!form.content.trim()) { setNoContent(true); contentRef.current?.focus(); return; } // no text message, just highlight the field
     setBusy(true); setError('');
     try {
       if (modal.note) await api.updateNote(modal.note.id, form); else await api.createNote(form);
@@ -185,7 +187,7 @@ export default function NotesPanel() {
               <form onSubmit={save} className="form" noValidate>
                 <h2>{modal.note ? 'Edit note' : 'New note'}</h2>
                 <input autoFocus placeholder="Title" aria-label="Title" maxLength={255} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-                <textarea rows={8} placeholder="Take a note…" aria-label="Content" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
+                <textarea ref={contentRef} className={noContent ? 'invalid' : ''} rows={8} placeholder="Take a note…" aria-label="Content" aria-invalid={noContent} value={form.content} onChange={(e) => { setNoContent(false); setForm({ ...form, content: e.target.value }); }} />
                 {error && <p className="error" role="alert">{error}</p>}
                 <div className="actions end"><button type="button" className="ghost" onClick={close}>Cancel</button><button className="primary" disabled={busy}>{busy ? 'Saving…' : 'Save'}</button></div>
               </form>
