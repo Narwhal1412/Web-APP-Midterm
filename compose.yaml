@@ -2,7 +2,6 @@
 # That is located inside compose.override.yaml for local deployment
 services:
  db:
-  container_name: webapp_db
   image: mariadb:11
   environment:
    MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -21,12 +20,11 @@ services:
  
  # Backend
  backend:
-  container_name: webapp_backend
   build: ./Backend
   environment:
    APP_KEY: ${APP_KEY}
    DB_CONNECTION: mariadb
-   DB_HOST: webapp_db
+   DB_HOST: ${DB_HOST}
    DB_DATABASE: ${DB_DATABASE}
    DB_USERNAME: ${DB_USERNAME}
    DB_PASSWORD: ${DB_PASSWORD}
@@ -42,7 +40,6 @@ services:
 
  # redis
  redis:
-  container_name: webapp_redis
   image: redis:7-alpine
   restart: unless-stopped
   healthcheck:
@@ -55,7 +52,7 @@ services:
   build: ./Frontend
   environment:
   #  Talk to the backend via docker network 
-   VITE_BACKEND: http://webapp_backend:8000
+   VITE_BACKEND: ${VITE_BACKEND}
   depends_on:
    - backend
 

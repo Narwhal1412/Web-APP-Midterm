@@ -2,11 +2,16 @@
 
 services:
  db:
+  container_name: webapp_db
   ports:
    - "3306:3306"
  backend:
+  container_name: webapp_backend
   ports:
-   - "8000:8000"
+  - "8000:8000"
  frontend:
+  container_name: webapp_frontend
   ports:
    - "3000:80"
+ redis:
+  container_name: webapp_redis
