@@ -17,7 +17,6 @@ export default function OutagePanel({ monitor }) {
           <button className="ghost small" onClick={clearEvents} disabled={!events.length}>Clear</button>
         </div>
       </div>
-      <p className="hint">Stop a service from a terminal (for example <span className="mono">docker compose kill backend</span>) and watch how long it stays down before Docker restarts it.</p>
       {events.length === 0 ? (
         <p className="muted" style={{ marginTop: 10 }}>No outage recorded yet.</p>
       ) : (
